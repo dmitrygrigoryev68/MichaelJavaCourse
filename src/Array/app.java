@@ -6,9 +6,9 @@ public class app {
     public static void main(String[] args) {
         Array arr = new Array();
 
-        int[] arrToAdd = {81, 82, 83, 84};
+        int[] arrToAdd = {91, 92, 93, 94};
 
-        int[] arrToAddFrom = {11, 12, 13, 14};
+        int[] arrToAddFrom = {21, 22, 23, 24};
 
         arr.add(0);
         arr.add(1);
