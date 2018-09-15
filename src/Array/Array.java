@@ -127,7 +127,6 @@ public class Array implements Iterable {
             addAll(arrToAdd);
             return true;
         }
-
         int newSize = size + arrToAdd.length;
         int[] newArr = copyArray(newSize);
         for (int i = index; i < size; i++) {
@@ -137,10 +136,10 @@ public class Array implements Iterable {
             newArr[i + index] = arrToAdd[i];
         }
         arr = copyArray(newSize);
-        for (int i = 0; i < newSize; i++) {
+        size = newSize;
+        for (int i = 0; i < size; i++) {
             arr[i] = newArr[i];
         }
-        size = newSize;
         return true;
     }
 
