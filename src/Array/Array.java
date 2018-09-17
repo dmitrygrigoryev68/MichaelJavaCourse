@@ -81,15 +81,9 @@ public class Array implements Iterable {
 
     public int remove(int number) {
         int foundIndex = indexOf(number);
-        if (foundIndex == -1) {
-            return -1;
-        }
-        int[] oldArr = copyArray(size);
+        if (foundIndex == -1) return -1;
         int oldValue = arr[foundIndex];
-        size--;
-        for (int i = foundIndex; i < size; i++) {
-            arr[i] = oldArr[i + 1];
-        }
+        removeByIndex(foundIndex);
         return oldValue;
     }
 
@@ -111,8 +105,9 @@ public class Array implements Iterable {
     public boolean addAll(int[] arrToAdd) {
         int newSize = size + arrToAdd.length;
         arr = copyArray(newSize);
-        for (int i = 0; i < arrToAdd.length; i++) {
-            arr[newSize - arrToAdd.length + i] = arrToAdd[i];
+        int i, j;
+        for (i = 0, j = i + size; i < arrToAdd.length; i++, j++) {
+            arr[j] = arrToAdd[i];
         }
         size = newSize;
         return true;
@@ -144,16 +139,15 @@ public class Array implements Iterable {
     }
 
     public boolean removeRange(int fromIndex, int toIndex) {
-        if (toIndex >= size) {
-            return false;
-        }
+        if (toIndex >= size) toIndex = size - 1;
+        if ((fromIndex >= size)||(fromIndex > toIndex)) return false;
         int range = toIndex - fromIndex + 1;
         int newSize = size - range;
         int[] newArr = new int[newSize];
         for (int i = 0; i < fromIndex; i++) {
             newArr[i] = arr[i];
         }
-        for (int i = 0; i < size - range - fromIndex; i++) {
+        for (int i = 0; i < newSize - fromIndex; i++) {
             newArr[i + fromIndex] = arr[i + 1 + toIndex];
         }
         size = newSize;
@@ -164,8 +158,9 @@ public class Array implements Iterable {
     }
 
     public int removeByIndex(int index) {
-        int[] oldArr = copyArray(size);
+        if (index >=size) return -1;
         int oldValue = arr[index];
+        int[] oldArr = copyArray(size);
         size--;
         for (int i = index; i < size; i++) {
             arr[i] = oldArr[i + 1];
