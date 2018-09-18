@@ -81,7 +81,9 @@ public class Array implements Iterable {
 
     public int remove(int number) {
         int foundIndex = indexOf(number);
-        if (foundIndex == -1) return -1;
+        if (foundIndex == -1) {
+            return -1;
+        }
         int oldValue = arr[foundIndex];
         removeByIndex(foundIndex);
         return oldValue;
@@ -139,8 +141,12 @@ public class Array implements Iterable {
     }
 
     public boolean removeRange(int fromIndex, int toIndex) {
-        if (toIndex >= size) toIndex = size - 1;
-        if ((fromIndex >= size)||(fromIndex > toIndex)) return false;
+        if (toIndex >= size) {
+            toIndex = size - 1;
+        }
+        if ((fromIndex >= size)||(fromIndex > toIndex)) {
+            return false;
+        }
         int range = toIndex - fromIndex + 1;
         int newSize = size - range;
         int[] newArr = new int[newSize];
@@ -151,14 +157,14 @@ public class Array implements Iterable {
             newArr[i + fromIndex] = arr[i + 1 + toIndex];
         }
         size = newSize;
-        for (int i = 0; i < size; i++) {
-            arr[i] = newArr[i];
-        }
+        arr=newArr;
         return true;
     }
 
     public int removeByIndex(int index) {
-        if (index >=size) return -1;
+        if (index >=size) {
+            return -1;
+        }
         int oldValue = arr[index];
         int[] oldArr = copyArray(size);
         size--;
