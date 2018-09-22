@@ -1,4 +1,4 @@
-package Array;
+/*package Array;
 
 import java.util.Iterator;
 
@@ -184,3 +184,4 @@ public class Array implements Iterable {
         return new ArrayIterator(arr, size);
     }
 }
+*/

@@ -1,4 +1,4 @@
-package Array;
+/*package Array;
 
 import java.util.Iterator;
 
@@ -25,4 +25,4 @@ public class ArrayIterator implements Iterator {
         currIndex++;
         return res;
     }
-}
+}*/
