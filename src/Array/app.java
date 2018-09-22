@@ -2,14 +2,14 @@ package Array;
 
 import java.util.*;
 
-public class app {
+public class app<T> {
     public static void main(String[] args) {
 
         GenericArray arr = new GenericArray();
 
         List<Integer> arrToAddInt = new ArrayList();
 
-        List<String> arrToAddStr = new LinkedList<>();
+        List<String> arrToAddStr = new ArrayList<>();
 
         arr.addTest("one");
         arr.addTest("two");
@@ -40,7 +40,7 @@ public class app {
 
         System.out.println("-------addAll-------");
 
-        arr.addAllTest(6, arrToAddStr);
+        arr.addAllTest(6, arrToAddInt);
         arr.print();
 
         System.out.println("-------removeRange-------");
@@ -51,11 +51,13 @@ public class app {
         arr.addAllTest(6,arrToAddStr);
         arr.print();
 
+
         System.out.println("-------Iterator-------");
         Iterator iterator = arr.iterator();
         while (iterator.hasNext()) {
             System.out.println(iterator.next());
         }
 
+((ArrayList<Integer>) arrToAddInt).trimToSize();
     }
 }
