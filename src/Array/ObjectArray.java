@@ -1,4 +1,4 @@
-package Array;
+/*package Array;
 
 import Array.ObjectArrayIterator;
 
@@ -183,4 +183,4 @@ public class ObjectArray implements Iterable {
     public Iterator iterator() {
         return new ObjectArrayIterator(elementsArr, size);
     }
-}
+}*/

@@ -5,11 +5,11 @@ import java.util.List;
 
 public class GenericArrayIterator<T> implements Iterator {
 
-    private List<T> arr;
+    private T[] arr;
     private int size;
     private int currIndex = 0;
 
-    GenericArrayIterator(List<T> arr, int size) {
+    GenericArrayIterator(T[] arr, int size) {
         this.arr = arr;
         this.size = size;
     }
@@ -21,7 +21,7 @@ public class GenericArrayIterator<T> implements Iterator {
 
     @Override
     public T next() {
-        T res = arr.get(currIndex);
+        T res = arr[currIndex];
         currIndex++;
         return res;
     }

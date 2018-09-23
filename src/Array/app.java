@@ -2,53 +2,43 @@ package Array;
 
 import java.util.*;
 
-public class app<T> {
+public class app {
     public static void main(String[] args) {
 
         GenericArray arr = new GenericArray();
 
-        List<Integer> arrToAddInt = new ArrayList();
 
-        List<String> arrToAddStr = new ArrayList<>();
-
-        arr.addTest("one");
-        arr.addTest("two");
-        arr.addTest("three");
-        arr.addTest("for");
-        arr.addTest("five");
-        arr.addTest("six");
-        arr.addTest("seven");
-
-        arrToAddInt.add(9);
-        arrToAddInt.add(9);
-        arrToAddInt.add(9);
-        arrToAddInt.add(9);
-
-        arrToAddStr.add("eight");
-        arrToAddStr.add("nine");
-        arrToAddStr.add("ten");
-
+        arr.add(0);
+        arr.add(1);
+        arr.add(2);
+        arr.add(3);
+        arr.add(4);
+        arr.add(5);
         arr.print();
+
+        Object[] arrToAddInt = {9,9,9,9,9};
+
         System.out.println("-------addAtPosition-------");
-        arr.addAtPositionTest(1, "I added this beautiful string");
-        arr.addAtPositionTest(2, 40);
+        arr.addAtPosition(1, 40);
+        arr.addAtPosition(2, 40);
         arr.print();
         System.out.println("-------remove&removeByIndex-------");
-        arr.removeTest("six");
-        arr.removeByIndexTest(2);
+        arr.removeByIndex(2);
+        arr.remove(40);
+
         arr.print();
 
         System.out.println("-------addAll-------");
 
-        arr.addAllTest(6, arrToAddInt);
+        arr.addAll(6, arrToAddInt);
         arr.print();
 
         System.out.println("-------removeRange-------");
-        arr.removeRangeTest(6, 9);
+        arr.removeRange(6, 9);
         arr.print();
 
         System.out.println("-------add StringArr-------");
-        arr.addAllTest(6,arrToAddStr);
+        arr.addAll(6,arrToAddInt);
         arr.print();
 
 
@@ -58,6 +48,5 @@ public class app<T> {
             System.out.println(iterator.next());
         }
 
-((ArrayList<Integer>) arrToAddInt).trimToSize();
     }
 }

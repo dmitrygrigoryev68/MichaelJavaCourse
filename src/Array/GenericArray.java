@@ -1,72 +1,22 @@
 package Array;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
 
 public class GenericArray<T> implements Iterable {
 
-    List<T> elementsArr = new ArrayList<>();
-    // private int size;
+    private Object[] elementsArr;
+    private int size;
+    private static final int DEFAULT_CAPACITY = 10;
 
-    public void addTest(T element) {
-        elementsArr.add(element);
+    GenericArray() {
+        elementsArr = new Object[DEFAULT_CAPACITY];
     }
 
-    public boolean addAllTest(int index, List<T> arrToAdd) {
-        elementsArr.addAll(index, arrToAdd);
-        return true;
+    GenericArray(int capacity) {
+        elementsArr = new Object[capacity];
     }
 
-    public boolean addAtPositionTest(int index, T element) {
-        elementsArr.add(index, element);
-        return true;
-    }
-
-    public boolean removeByIndexTest(int index) {
-        if (index < 0 || index >= elementsArr.size()) {
-            return false;
-        }
-        elementsArr.remove(index);
-        return true;
-    }
-
-    public boolean removeTest(T element) {
-        elementsArr.remove(element);
-        return true;
-    }
-
-    public boolean removeRangeTest(int fromIndex, int toIndex) {
-        if (toIndex <= 0 || fromIndex <= 0) {
-            return false;
-        }
-        if (toIndex >= elementsArr.size()) {
-            toIndex = elementsArr.size() - 1;
-        }
-        if (fromIndex >= elementsArr.size()) {
-            fromIndex = elementsArr.size() - 1;
-        }
-
-        for (int index = toIndex; index >= fromIndex; index--) {
-            elementsArr.remove(elementsArr.get(index));
-        }
-        return true;
-    }
-    public void print() {
-        for (int i = 0; i < elementsArr.size(); i++) {
-            System.out.println(elementsArr.get(i));
-        }
-        System.out.println("\n");
-    }
-
-    @Override
-    public Iterator iterator() {
-        return new GenericArrayIterator(elementsArr, elementsArr.size());
-    }
-
-}
-
-
-////////////////////////// Handmade functions/////////////////////////////////////
-/*
     public int getSize() {
         return size;
     }
@@ -77,7 +27,7 @@ public class GenericArray<T> implements Iterable {
 
     public int indexOf(T element) {
         for (int i = 0; i < size; i++) {
-            if (elementsArr.get(i).equals(element)) {
+            if (elementsArr[i].equals(element)) {
                 return i;
             }
         }
@@ -86,67 +36,66 @@ public class GenericArray<T> implements Iterable {
 
     public int lastIndexOf(T element) {
         for (int i = size - 1; i >= 0; i--) {
-            if (elementsArr.get(i).equals(element)) {
+            if (elementsArr[i].equals(element)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public T get(int index) {
+    public Object get(int index) {
         if (rangeCheck(index)) {
-            return elementsArr.get(index);
+            return elementsArr[index];
         }
-        return null;
+        return -1;
     }
 
     public T set(int index, T element) {
         T oldValue = null;
         if (rangeCheck(index)) {
-            oldValue = elementsArr.get(index);
-            elementsArr.set(index, element);
+            oldValue = (T) elementsArr[index];
+            elementsArr[index] = element;
         }
         return oldValue;
     }
 
     public boolean add(T element) {
         ensureCapacity(size + 1);
-        elementsArr.set(size, element);
+        elementsArr[size] = element;
         size++;
         return true;
     }
-
 
     public boolean addAtPosition(int index, T element) {
         if (index >= size) {
             return false;
         }
         ensureCapacity(size + 1);
-        copyArray(elementsArr, index, elementsArr, index + 1, size - index);
-        elementsArr.set(index, element);
+        copyArray((T[]) elementsArr, index, (T[]) elementsArr, index + 1, size - index);
+        elementsArr[index] = element;
         size++;
         return true;
     }
 
-    public boolean addAll(List<T> arrToAdd) {
-        ensureCapacity(size + arrToAdd.size());
-        copyArray(arrToAdd, 0, elementsArr, size, arrToAdd.size());
-        size += arrToAdd.size();
+    public boolean addAll(T[] arrToAdd) {
+        ensureCapacity(size + arrToAdd.length);
+        copyArray(arrToAdd, 0, (T[]) elementsArr, size, arrToAdd.length);
+        size += arrToAdd.length;
         return true;
     }
 
-    public boolean addAll(int index, List<T> arrToAdd) {
+    public boolean addAll(int index, T[] arrToAdd) {
         if (index > size || index < 0) {
             return false;
         }
-        ensureCapacity(size + arrToAdd.size());
+        ensureCapacity(size + arrToAdd.length);
 //        how much the array needs to grow
         int step = size - index;
 //        if step is bigger than 0, than index is between 0 and size-1, so we need to copy existing array
         if (step > 0) {
-            copyArray(elementsArr, index, elementsArr, index + arrToAdd.size(), step);
-            copyArray(arrToAdd, 0, elementsArr, index, elementsArr.size());
-            size += arrToAdd.size();
+            copyArray((T[]) elementsArr, index, (T[]) elementsArr, index + arrToAdd.length, step);
+            copyArray(arrToAdd, 0, (T[]) elementsArr, index, elementsArr.length);
+            size += arrToAdd.length;
         } else {
             addAll(arrToAdd);
         }
@@ -159,6 +108,7 @@ public class GenericArray<T> implements Iterable {
             return false;
         }
         removeByIndex(foundIndex);
+        trimToSize();
         return true;
     }
 
@@ -166,48 +116,50 @@ public class GenericArray<T> implements Iterable {
         if (!rangeCheck(index)) {
             return null;
         }
-        T oldValue = elementsArr.get(index);
-        copyArray(elementsArr, index + 1, elementsArr, index, size - index);
+        T oldValue = (T) elementsArr[index];
+        copyArray((T[]) elementsArr, index + 1, (T[]) elementsArr, index, size - index);
         size--;
+        trimToSize();
         return oldValue;
     }
 
     public boolean removeRange(int fromIndex, int toIndex) {
         int step = size - toIndex;
-        copyArray(elementsArr, toIndex, elementsArr, fromIndex, step);
+        copyArray((T[]) elementsArr, toIndex, (T[]) elementsArr, fromIndex, step);
         if (fromIndex < 0 || fromIndex >= size || toIndex > size || toIndex < fromIndex) {
             return false;
         }
         size -= (toIndex - fromIndex);
+        trimToSize();
         return true;
     }
 
 
     private void ensureCapacity(int minCapacity) {
-        if (minCapacity > elementsArr.size()) resizeCapacity(minCapacity);
+        if (minCapacity - elementsArr.length > 0) resizeCapacity(minCapacity);
     }
 
     private void resizeCapacity(int minCapacity) {
-        int oldCapacity = elementsArr.size();
+        int oldCapacity = elementsArr.length;
         int newCapacity = oldCapacity + (oldCapacity * 2);
-        if (newCapacity < minCapacity) newCapacity = minCapacity;
-        elementsArr = copyArray(elementsArr, newCapacity);
+        if (newCapacity - minCapacity < 0) newCapacity = minCapacity;
+        elementsArr = copyArray((T[]) elementsArr, newCapacity);
     }
 
-    private List<T> copyArray(List<T> elementsArr, int newSize) {
-        List<T> newArr = new ArrayList<>();
+    private T[] copyArray(T[] elementsArr, int newSize) {
+        Object[] newArr = new Object[newSize];
         for (int i = 0; i < size; i++) {
-            newArr.set(i, elementsArr.get(i));
+            newArr[i] = elementsArr[i];
         }
-        return newArr;
+        return (T[]) newArr;
     }
 
-    private void copyArray(List<T> src, int srcPos, List<T> dest, int destPos, int length) {
-        if (src.equals(dest)) {
-            src = copyArray(src, src.size());
+    private void copyArray(T[] src, int srcPos, T[] dest, int destPos, int length) {
+        if (Arrays.equals(src, dest)) {
+            src = copyArray(src, src.length);
         }
-        while (length + 1 >= 0 && destPos < dest.size() && srcPos < src.size()) {
-            dest.set(destPos, src.get(srcPos));
+        while (length + 1 >= 0 && destPos < dest.length && srcPos < src.length) {
+            dest[destPos] = src[srcPos];
             destPos++;
             srcPos++;
             length--;
@@ -221,4 +173,20 @@ public class GenericArray<T> implements Iterable {
         return true;
     }
 
-    */
+    public void print() {
+        for (int i = 0; i < size; i++) {
+            System.out.println(elementsArr[i]);
+        }
+    }
+
+    @Override
+    public Iterator iterator() {
+        return new GenericArrayIterator(elementsArr, size);
+    }
+
+    public void trimToSize() {
+        if (elementsArr.length > size) {
+            elementsArr = copyArray((T[]) elementsArr, size);
+        }
+    }
+}
