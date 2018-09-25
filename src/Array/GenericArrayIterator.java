@@ -1,7 +1,6 @@
 package Array;
 
 import java.util.Iterator;
-import java.util.List;
 
 public class GenericArrayIterator<T> implements Iterator {
 

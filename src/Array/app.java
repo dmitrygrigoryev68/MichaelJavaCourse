@@ -16,7 +16,7 @@ public class app {
         arr.add(5);
         arr.print();
 
-        Object[] arrToAddInt = {9,9,9,9,9};
+        Object[] arrToAddInt = {6,7,8,9};
 
         System.out.println("-------addAtPosition-------");
         arr.addAtPosition(1, 40);
@@ -34,10 +34,10 @@ public class app {
         arr.print();
 
         System.out.println("-------removeRange-------");
-        arr.removeRange(6, 9);
+        arr.removeRange(1,2);
         arr.print();
 
-        System.out.println("-------add StringArr-------");
+        System.out.println("-------add arrToAdd" + "-------");
         arr.addAll(6,arrToAddInt);
         arr.print();
 
@@ -47,6 +47,5 @@ public class app {
         while (iterator.hasNext()) {
             System.out.println(iterator.next());
         }
-
     }
 }

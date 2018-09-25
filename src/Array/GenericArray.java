@@ -107,6 +107,7 @@ public class GenericArray<T> implements Iterable {
         if (foundIndex == -1) {
             return false;
         }
+        elementsArr[foundIndex] = null;
         removeByIndex(foundIndex);
         trimToSize();
         return true;
@@ -116,23 +117,55 @@ public class GenericArray<T> implements Iterable {
         if (!rangeCheck(index)) {
             return null;
         }
+        elementsArr[index] = null;
         T oldValue = (T) elementsArr[index];
         copyArray((T[]) elementsArr, index + 1, (T[]) elementsArr, index, size - index);
         size--;
+
         trimToSize();
         return oldValue;
     }
-
     public boolean removeRange(int fromIndex, int toIndex) {
-        int step = size - toIndex;
-        copyArray((T[]) elementsArr, toIndex, (T[]) elementsArr, fromIndex, step);
-        if (fromIndex < 0 || fromIndex >= size || toIndex > size || toIndex < fromIndex) {
+        if (toIndex >= size) {
+            toIndex = size - 1;
+        }
+        if ((fromIndex >= size)||(fromIndex > toIndex)) {
             return false;
         }
-        size -= (toIndex - fromIndex);
+        int range = toIndex - fromIndex + 1;
+        int newSize = size - range;
+        Object[] newArr = new Object[newSize];
+        for (int i = 0; i < fromIndex; i++) {
+            newArr[i] = elementsArr[i];
+        }
+        for (int i = 0; i < newSize - fromIndex; i++) {
+            newArr[i + fromIndex] = elementsArr[i + 1 + toIndex];
+        }
+        for (int i = fromIndex; i < toIndex; i++) {
+            elementsArr[i] = null;
+        }
+        size = newSize;
+        elementsArr=newArr;
         trimToSize();
         return true;
     }
+   /* public boolean removeRange(int fromIndex, int toIndex) {
+        if (fromIndex < 0 || toIndex < fromIndex) {
+            return false;
+        }
+        if (fromIndex >= size) {
+            fromIndex = size - 1;
+        }
+        ;
+        if (toIndex >= size) {
+            toIndex = size - 1;
+        }
+        int step = size - toIndex;
+        copyArray((T[]) elementsArr, toIndex, (T[]) elementsArr, fromIndex, step);
+        size -= (toIndex - fromIndex);
+        trimToSize();
+        return true;
+    }*/
 
 
     private void ensureCapacity(int minCapacity) {
